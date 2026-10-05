@@ -8,3 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Architecture rules
+- Simulated prices come from `src/lib/market.ts` (deterministic per symbol/time) so server fills and UI agree; swap in a real provider behind a server function later.
+- All money-moving actions (orders, fills, onboarding balance, XP) run in server functions using the `execute_fill` DB function; clients can only read their own rows via RLS.
