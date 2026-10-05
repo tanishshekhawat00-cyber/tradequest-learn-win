@@ -11,7 +11,7 @@ import { PriceChart, RangeTabs, Sparkline } from "@/components/price-chart";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { fmtINR, fmtPct, fmtSigned, toneClass } from "@/lib/format";
-import { ASSETS, getAsset, getHistory, getQuote, INDEX, type Range } from "@/lib/market";
+import { ASSETS, getHistory, getQuote, INDEX, type Range } from "@/lib/market";
 import { portfolioSeries, riskScore, tradeStats } from "@/lib/portfolio";
 import { CHALLENGES } from "@/lib/challenges";
 import { getLeaderboard } from "@/lib/trading.functions";
@@ -30,14 +30,13 @@ function Dashboard() {
   const lbFn = useServerFn(getLeaderboard);
   const lb = useQuery({ queryKey: ["leaderboard"], queryFn: () => lbFn() });
   const wl = useWatchlists();
+  const minute = Math.floor(now / 60000);
+  const series = useMemo(
+    () => (data ? portfolioSeries(data.trades, Number(data.profile.starting_balance), data.profile.created_at, range, minute * 60000).map((d) => ({ t: d.t, v: d.value })) : []),
+    [data, range, minute],
+  );
   if (!data || !summary) return null;
   const p = data.profile;
-
-  const series = useMemo(
-    () => portfolioSeries(data.trades, Number(p.starting_balance), p.created_at, range, now).map((d) => ({ t: d.t, v: d.value })),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data.trades, range, Math.floor(now / 60000)],
-  );
   const risk = riskScore(positions, summary.cash, data.pending, data.trades);
   const stats = tradeStats(data.trades);
   const alloc = [
@@ -247,4 +246,3 @@ function Card({ title, action, children }: { title: string; action?: React.React
   );
 }
 
-export { getAsset };
