@@ -14,16 +14,262 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      holdings: {
+        Row: {
+          avg_price: number
+          id: string
+          quantity: number
+          symbol: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avg_price?: number
+          id?: string
+          quantity?: number
+          symbol: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avg_price?: number
+          id?: string
+          quantity?: number
+          symbol?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      lesson_progress: {
+        Row: {
+          completed_at: string
+          id: string
+          lesson_id: string
+          quiz_score: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          id?: string
+          lesson_id: string
+          quiz_score: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          id?: string
+          lesson_id?: string
+          quiz_score?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          created_at: string
+          filled_at: string | null
+          filled_price: number | null
+          id: string
+          order_type: Database["public"]["Enums"]["order_type"]
+          quantity: number
+          reject_reason: string | null
+          side: Database["public"]["Enums"]["order_side"]
+          status: Database["public"]["Enums"]["order_status"]
+          symbol: string
+          trigger_price: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          filled_at?: string | null
+          filled_price?: number | null
+          id?: string
+          order_type: Database["public"]["Enums"]["order_type"]
+          quantity: number
+          reject_reason?: string | null
+          side: Database["public"]["Enums"]["order_side"]
+          status?: Database["public"]["Enums"]["order_status"]
+          symbol: string
+          trigger_price?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          filled_at?: string | null
+          filled_price?: number | null
+          id?: string
+          order_type?: Database["public"]["Enums"]["order_type"]
+          quantity?: number
+          reject_reason?: string | null
+          side?: Database["public"]["Enums"]["order_side"]
+          status?: Database["public"]["Enums"]["order_status"]
+          symbol?: string
+          trigger_price?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          cash: number
+          created_at: string
+          display_name: string | null
+          experience: Database["public"]["Enums"]["experience_level"]
+          id: string
+          onboarded: boolean
+          starting_balance: number | null
+          updated_at: string
+          username: string | null
+          xp: number
+        }
+        Insert: {
+          avatar_url?: string | null
+          cash?: number
+          created_at?: string
+          display_name?: string | null
+          experience?: Database["public"]["Enums"]["experience_level"]
+          id: string
+          onboarded?: boolean
+          starting_balance?: number | null
+          updated_at?: string
+          username?: string | null
+          xp?: number
+        }
+        Update: {
+          avatar_url?: string | null
+          cash?: number
+          created_at?: string
+          display_name?: string | null
+          experience?: Database["public"]["Enums"]["experience_level"]
+          id?: string
+          onboarded?: boolean
+          starting_balance?: number | null
+          updated_at?: string
+          username?: string | null
+          xp?: number
+        }
+        Relationships: []
+      }
+      trades: {
+        Row: {
+          cost_basis: number | null
+          created_at: string
+          id: string
+          order_id: string | null
+          price: number
+          quantity: number
+          realized_pnl: number | null
+          side: Database["public"]["Enums"]["order_side"]
+          symbol: string
+          user_id: string
+          value: number
+        }
+        Insert: {
+          cost_basis?: number | null
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          price: number
+          quantity: number
+          realized_pnl?: number | null
+          side: Database["public"]["Enums"]["order_side"]
+          symbol: string
+          user_id: string
+          value: number
+        }
+        Update: {
+          cost_basis?: number | null
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          price?: number
+          quantity?: number
+          realized_pnl?: number | null
+          side?: Database["public"]["Enums"]["order_side"]
+          symbol?: string
+          user_id?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trades_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      watchlist_items: {
+        Row: {
+          created_at: string
+          id: string
+          symbol: string
+          user_id: string
+          watchlist_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          symbol: string
+          user_id?: string
+          watchlist_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          symbol?: string
+          user_id?: string
+          watchlist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "watchlist_items_watchlist_id_fkey"
+            columns: ["watchlist_id"]
+            isOneToOne: false
+            referencedRelation: "watchlists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      watchlists: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      execute_fill: {
+        Args: { _order_id: string; _price: number }
+        Returns: string
+      }
     }
     Enums: {
-      [_ in never]: never
+      experience_level: "beginner" | "intermediate" | "advanced"
+      order_side: "buy" | "sell"
+      order_status: "pending" | "filled" | "cancelled" | "rejected"
+      order_type: "market" | "limit" | "stop_loss" | "take_profit"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +396,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      experience_level: ["beginner", "intermediate", "advanced"],
+      order_side: ["buy", "sell"],
+      order_status: ["pending", "filled", "cancelled", "rejected"],
+      order_type: ["market", "limit", "stop_loss", "take_profit"],
+    },
   },
 } as const
