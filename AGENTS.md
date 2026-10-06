@@ -12,3 +12,4 @@
 ## Architecture rules
 - Simulated prices come from `src/lib/market.ts` (deterministic per symbol/time) so server fills and UI agree; swap in a real provider behind a server function later.
 - All money-moving actions (orders, fills, onboarding balance, XP) run in server functions using the `execute_fill` DB function; clients can only read their own rows via RLS.
+- Trading OHLC bars are aggregated from the shared deterministic price provider; technical indicators use a library, and browser chart rendering is dynamically imported after hydration to keep SSR safe.
