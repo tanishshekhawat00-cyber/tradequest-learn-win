@@ -8,6 +8,7 @@ import { getHistory, getQuote, searchAssets, SECTORS } from "@/lib/market";
 import { fmtCompact, fmtINR } from "@/lib/format";
 import { useNow } from "@/hooks/use-portfolio";
 import { cn } from "@/lib/utils";
+import { MarketOverview } from "@/components/market-overview";
 
 export const Route = createFileRoute("/_authenticated/markets/")({
   head: () => ({ meta: [{ title: "Markets — TradeQuest" }] }),
@@ -29,6 +30,7 @@ function Markets() {
         </div>
         <SimBadge />
       </div>
+      <MarketOverview now={now} />
       <div className="relative">
         <Search className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Try “bank”, “TCS” or “Pharmaceuticals”" className="h-12 rounded-2xl pl-11 text-base" autoFocus />
