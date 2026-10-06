@@ -39,7 +39,15 @@ export function TradingChart({ symbol, now, range, onRangeChange }: { symbol: st
         root.appendChild(probe);
         const result = getComputedStyle(probe).color;
         probe.remove();
-        return result;
+        // Chart library accepts sRGB, while the design system uses OKLCH.
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = 1;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        if (!ctx) throw new Error("Canvas unavailable");
+        ctx.fillStyle = result;
+        ctx.fillRect(0, 0, 1, 1);
+        const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data;
+        return `rgba(${r}, ${g}, ${b}, ${(a ?? 255) / 255})`;
       };
       const gain = color("gain"), loss = color("loss"), primary = color("primary"), grid = color("border");
       const chart = lc.createChart(root, {
@@ -49,6 +57,7 @@ export function TradingChart({ symbol, now, range, onRangeChange }: { symbol: st
         crosshair: { mode: lc.CrosshairMode.Normal },
       });
       chartRef.current = chart;
+      cleanup = () => { updateRef.current = null; chartRef.current = null; chart.remove(); };
       const priceOptions = { upColor: gain, downColor: loss, borderVisible: false, wickUpColor: gain, wickDownColor: loss, priceFormat: { type: "price" as const, precision: 2, minMove: 0.01 } };
       const price = mode === "candles" ? chart.addSeries(lc.CandlestickSeries, priceOptions)
         : mode === "ohlc" ? chart.addSeries(lc.BarSeries, priceOptions)
