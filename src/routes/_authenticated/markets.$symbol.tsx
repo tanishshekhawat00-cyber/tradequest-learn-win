@@ -4,7 +4,8 @@ import { ArrowLeft, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AssetBadge, ChangePill, SimBadge, Stat } from "@/components/brand";
-import { PriceChart, RangeTabs } from "@/components/price-chart";
+import { TradingChart } from "@/components/trading-chart";
+import { QuoteStatus } from "@/components/market-overview";
 import { TradeDialog } from "@/components/trade-dialog";
 import { getAsset, getHistory, getQuote, type Range } from "@/lib/market";
 import { fmtCompact, fmtINR, fmtNum, fmtPct, fmtSigned, toneClass } from "@/lib/format";
@@ -30,18 +31,18 @@ export const Route = createFileRoute("/_authenticated/markets/$symbol")({
 
 function AssetPage() {
   const { symbol } = Route.useLoaderData();
-  const asset = getAsset(symbol)!;
+  const asset = getAsset(symbol);
   const { positions, now } = usePortfolio();
   const [range, setRange] = useState<Range>("1D");
   const [trade, setTrade] = useState<"buy" | "sell" | null>(null);
   const wl = useWatchlists();
   const m = useWatchlistMutations();
   const q = getQuote(symbol, now);
-  const minute = Math.floor(now / 30000);
-  const hist = useMemo(() => getHistory(symbol, range, minute * 30000, 160).map((d) => ({ t: d.t, v: d.price })), [symbol, range, minute]);
+  const hist = useMemo(() => getHistory(symbol, range, now, 160).map((d) => ({ t: d.t, v: d.price })), [symbol, range, now]);
   const rangeChange = ((hist[hist.length - 1].v - hist[0].v) / hist[0].v) * 100;
   const pos = positions.find((p) => p.symbol === symbol);
   const inLists = (wl.data ?? []).filter((w) => w.items.some((i) => i.symbol === symbol));
+  if (!asset) return null;
 
   return (
     <div className="space-y-6">
@@ -77,7 +78,7 @@ function AssetPage() {
         </div>
       </div>
 
-      <div className="rounded-3xl border bg-card p-5">
+      <div className="min-w-0 rounded-lg border bg-card p-3 sm:p-5">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <div className="num text-4xl font-semibold">{fmtINR(q.price)}</div>
@@ -86,9 +87,9 @@ function AssetPage() {
               <span className="text-muted-foreground">{range === "1D" ? "past 24h" : `past ${range}`}</span>
             </div>
           </div>
-          <div className="flex flex-col items-end gap-2"><SimBadge /><RangeTabs value={range} onChange={setRange} /></div>
+          <div className="flex flex-col items-end gap-2"><SimBadge /><QuoteStatus now={now} /></div>
         </div>
-        <div className="mt-4"><PriceChart data={hist} range={range} height={320} positive={rangeChange >= 0} /></div>
+        <div className="mt-4"><TradingChart symbol={symbol} now={now} range={range} onRangeChange={setRange} /></div>
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">

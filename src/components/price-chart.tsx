@@ -3,18 +3,22 @@ import { format } from "date-fns";
 import { fmtINR } from "@/lib/format";
 import { RANGES, type Range } from "@/lib/market";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export function RangeTabs({ value, onChange, ranges = RANGES }: { value: Range; onChange: (r: Range) => void; ranges?: readonly Range[] }) {
   return (
-    <div className="inline-flex rounded-full bg-secondary p-1">
+    <div className="inline-flex max-w-full gap-0.5 rounded-full bg-secondary p-1">
       {ranges.map((r) => (
-        <button
+        <Button
           key={r}
+          variant="ghost"
+          size="sm"
+          aria-pressed={value === r}
           onClick={() => onChange(r)}
-          className={cn("rounded-full px-3 py-1 text-xs font-medium transition-colors", value === r ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}
+          className={cn("h-7 shrink-0 rounded-full px-2.5 text-xs font-medium transition-colors", value === r ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}
         >
           {r}
-        </button>
+        </Button>
       ))}
     </div>
   );
