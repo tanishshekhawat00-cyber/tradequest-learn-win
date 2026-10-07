@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute } from "@tanstack/react-router";
 import { formatDistanceToNowStrict } from "date-fns";
 import { CheckCircle2 } from "lucide-react";
@@ -6,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { CHALLENGES } from "@/lib/challenges";
 
 export const Route = createFileRoute("/_authenticated/challenges")({
-  head: () => ({ meta: [{ title: "Challenges — TradeQuest" }] }),
+  head: () => ({ meta: pageMeta("Challenges — TradeQuest", "Track daily, weekly and monthly paper-trading and learning challenges in TradeQuest.") }),
   component: ChallengesPage,
 });
 

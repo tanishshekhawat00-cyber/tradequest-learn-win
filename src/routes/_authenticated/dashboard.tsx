@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -18,7 +19,7 @@ import { getLeaderboard } from "@/lib/trading.functions";
 import { format } from "date-fns";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — TradeQuest" }] }),
+  head: () => ({ meta: pageMeta("Dashboard — TradeQuest", "Track virtual portfolio value, paper-trading returns, allocation and risk in TradeQuest.") }),
   component: Dashboard,
 });
 

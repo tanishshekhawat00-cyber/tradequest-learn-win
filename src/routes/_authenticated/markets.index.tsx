@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
@@ -11,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { MarketOverview } from "@/components/market-overview";
 
 export const Route = createFileRoute("/_authenticated/markets/")({
-  head: () => ({ meta: [{ title: "Markets — TradeQuest" }] }),
+  head: () => ({ meta: pageMeta("Markets — TradeQuest", "Analyze simulated Indian stocks with TradeQuest candlestick charts, technical indicators and sector heatmaps.") }),
   component: Markets,
 });
 

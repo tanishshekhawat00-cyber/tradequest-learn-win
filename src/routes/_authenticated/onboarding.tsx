@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
@@ -13,7 +14,7 @@ import { fmtINR } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
-  head: () => ({ meta: [{ title: "Set up your account — TradeQuest" }] }),
+  head: () => ({ meta: pageMeta("Set up your account — TradeQuest", "Choose your experience level and starting virtual balance for TradeQuest paper trading.") }),
   component: Onboarding,
 });
 

@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
@@ -15,7 +16,7 @@ import { cancelOrder } from "@/lib/trading.functions";
 import type { Range } from "@/lib/market";
 
 export const Route = createFileRoute("/_authenticated/portfolio")({
-  head: () => ({ meta: [{ title: "Portfolio — TradeQuest" }] }),
+  head: () => ({ meta: pageMeta("Portfolio — TradeQuest", "Analyze your virtual holdings, allocation, paper-trading profit and loss, and open orders in TradeQuest.") }),
   component: PortfolioPage,
 });
 

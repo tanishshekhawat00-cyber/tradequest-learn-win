@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQueryClient } from "@tanstack/react-query";
@@ -11,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/learn/$lessonId")({
   loader: ({ params }) => { const l = getLesson(params.lessonId); if (!l) throw notFound(); return { id: l.id }; },
-  head: ({ loaderData }) => ({ meta: [{ title: `${loaderData ? getLesson(loaderData.id)?.title : "Lesson"} — TradeQuest` }] }),
+  head: ({ loaderData }) => ({ meta: pageMeta(`${loaderData ? getLesson(loaderData.id)?.title : "Lesson"} — TradeQuest`, loaderData ? getLesson(loaderData.id)?.summary ?? "Study trading concepts in TradeQuest." : "Study trading concepts in TradeQuest.") }),
   notFoundComponent: () => <div className="p-10 text-center">Lesson not found. <Link to="/learn" className="underline">Back</Link></div>,
   errorComponent: () => <div className="p-10 text-center">Couldn't load this lesson.</div>,
   component: LessonPage,

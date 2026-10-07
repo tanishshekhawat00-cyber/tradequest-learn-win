@@ -9,9 +9,9 @@
 - [ ] QuestCoach AI, advanced analytics, trading journal, badges, social feed
 
 ## Trading chart upgrade
-- [ ] Candlestick, OHLC, line and area charts with volume and technical indicators
-- [ ] Updating stock movement, market breadth and sector heatmap (clearly simulated until a licensed feed is connected)
-- [ ] Verify chart controls and data calculations
+- [x] Candlestick, OHLC, line and area charts with volume and technical indicators
+- [x] Updating stock movement, market breadth and sector heatmap (clearly simulated until a licensed feed is connected)
+- [x] Verify chart controls and data calculations
 - [ ] Real-time exchange feed — requires a licensed market-data provider and credentials
 
 ## Phase 3
