@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -9,7 +10,7 @@ import { levelFor } from "@/lib/levels";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/leaderboard")({
-  head: () => ({ meta: [{ title: "Leaderboard — TradeQuest" }] }),
+  head: () => ({ meta: pageMeta("Leaderboard — TradeQuest", "Compare paper-trading returns and learning progress on the TradeQuest leaderboard.") }),
   component: Leaderboard,
 });
 

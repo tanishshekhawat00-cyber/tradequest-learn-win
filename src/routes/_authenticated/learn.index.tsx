@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle2, Clock } from "lucide-react";
@@ -6,7 +7,7 @@ import { LESSONS, LEVELS } from "@/lib/lessons";
 import { Progress } from "@/components/ui/progress";
 
 export const Route = createFileRoute("/_authenticated/learn/")({
-  head: () => ({ meta: [{ title: "Learning Center — TradeQuest" }] }),
+  head: () => ({ meta: pageMeta("Learning Center — TradeQuest", "Learn investing fundamentals with TradeQuest lessons, examples and quizzes.") }),
   component: Learn,
 });
 

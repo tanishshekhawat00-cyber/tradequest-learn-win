@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute } from "@tanstack/react-router";
 import { usePortfolio } from "@/hooks/use-portfolio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -8,7 +9,7 @@ import { fmtINR, fmtPct } from "@/lib/format";
 import { tradeStats } from "@/lib/portfolio";
 
 export const Route = createFileRoute("/_authenticated/profile")({
-  head: () => ({ meta: [{ title: "Profile — TradeQuest" }] }),
+  head: () => ({ meta: pageMeta("Profile — TradeQuest", "View your TradeQuest experience, learning progress and paper-trading statistics.") }),
   component: Profile,
 });
 

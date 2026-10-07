@@ -7,6 +7,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "TradeQuest — Learn Trading. Practice Risk-Free. Compete." },
       { name: "description", content: "Paper trade with virtual money, learn investing fundamentals, take challenges and climb leaderboards. No real money involved." },
       { property: "og:title", content: "TradeQuest — Learn Trading. Practice Risk-Free. Compete." },

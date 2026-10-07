@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Star, Trash2, X } from "lucide-react";
@@ -10,7 +11,7 @@ import { getQuote } from "@/lib/market";
 import { fmtINR } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/watchlist")({
-  head: () => ({ meta: [{ title: "Watchlists — TradeQuest" }] }),
+  head: () => ({ meta: pageMeta("Watchlists — TradeQuest", "Follow your favorite simulated Indian stocks with TradeQuest watchlists.") }),
   component: WatchlistPage,
 });
 

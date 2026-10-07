@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ArrowLeft, Star } from "lucide-react";
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/_authenticated/markets/$symbol")({
     if (!a || a.sector === "Index") throw notFound();
     return { symbol: a.symbol };
   },
-  head: ({ loaderData }) => ({ meta: [{ title: loaderData ? `${loaderData.symbol} — TradeQuest` : "Asset — TradeQuest" }] }),
+  head: ({ loaderData }) => ({ meta: pageMeta(loaderData ? `${loaderData.symbol} charts — TradeQuest` : "Stock charts — TradeQuest", `Analyze ${loaderData?.symbol ?? "stocks"} with simulated candlesticks, volume, RSI and MACD. Trade only virtual money in TradeQuest.`) }),
   notFoundComponent: () => (
     <div className="p-10 text-center">
       <p className="font-semibold">Asset not found</p>

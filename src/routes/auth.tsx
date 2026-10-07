@@ -11,6 +11,8 @@ import { Logo } from "@/components/brand";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Sign in — TradeQuest" },
       { name: "description", content: "Sign in or create your free TradeQuest account to start paper trading with virtual money." },
       { property: "og:title", content: "Sign in — TradeQuest" },

@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
@@ -10,7 +11,7 @@ import { EmptyState } from "@/components/brand";
 import { fmtINR, fmtNum, fmtPct, fmtSigned, toneClass } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/history")({
-  head: () => ({ meta: [{ title: "Trade history — TradeQuest" }] }),
+  head: () => ({ meta: pageMeta("Trade history — TradeQuest", "Review and export your simulated stock trades and realized returns in TradeQuest.") }),
   component: HistoryPage,
 });
 

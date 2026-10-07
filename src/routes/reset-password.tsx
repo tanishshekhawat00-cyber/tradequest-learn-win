@@ -10,6 +10,8 @@ import { Logo } from "@/components/brand";
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Set a new password — TradeQuest" },
       { name: "description", content: "Choose a new password for your TradeQuest account." },
       { property: "og:title", content: "Set a new password — TradeQuest" },
