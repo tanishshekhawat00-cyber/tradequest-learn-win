@@ -14,3 +14,4 @@
 - All money-moving actions (orders, fills, onboarding balance, XP) run in server functions using the `execute_fill` DB function; clients can only read their own rows via RLS.
 - Trading OHLC bars are aggregated from the shared deterministic price provider; technical indicators use a library, and browser chart rendering is dynamically imported after hydration to keep SSR safe.
 - Leaf routes use shared metadata generation for titles, descriptions and social tags so page previews stay consistent without exposing account data.
+- Dashboard stock details and risk visualization are focused presentation components backed by shared simulated quotes and actual portfolio rows; unavailable fundamentals remain unavailable rather than fabricated.
