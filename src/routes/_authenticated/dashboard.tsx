@@ -4,13 +4,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-import { ArrowRight, BookOpen, Search, ShieldAlert, Sparkles, Trophy } from "lucide-react";
+import { ArrowRight, BookOpen, Search, Sparkles, Trophy, TrendingUp, TrendingDown } from "lucide-react";
 import { usePortfolio } from "@/hooks/use-portfolio";
 import { useWatchlists } from "@/hooks/use-watchlists";
 import { AssetBadge, ChangePill, EmptyState, SimBadge, Stat } from "@/components/brand";
 import { PriceChart, RangeTabs, Sparkline } from "@/components/price-chart";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { DashboardStockPanel } from "@/components/dashboard-stock-panel";
+import { PortfolioRiskMeter } from "@/components/portfolio-risk-meter";
 import { fmtINR, fmtPct, fmtSigned, toneClass } from "@/lib/format";
 import { ASSETS, getHistory, getQuote, INDEX, type Range } from "@/lib/market";
 import { portfolioSeries, riskScore, tradeStats } from "@/lib/portfolio";
@@ -27,7 +29,8 @@ const COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--cha
 
 function Dashboard() {
   const { data, summary, positions, now } = usePortfolio();
-  const [range, setRange] = useState<Range>("1M");
+  const [range, setRange] = useState<Range>("1D");
+  const [selectedSymbol, setSelectedSymbol] = useState("RELIANCE");
   const lbFn = useServerFn(getLeaderboard);
   const lb = useQuery({ queryKey: ["leaderboard"], queryFn: () => lbFn() });
   const wl = useWatchlists();
@@ -50,6 +53,11 @@ function Dashboard() {
   const movers = ASSETS.map((a) => getQuote(a.symbol, now)).sort((a, b) => Math.abs(b.changePct) - Math.abs(a.changePct)).slice(0, 5);
   const idx = getQuote(INDEX.symbol, now);
   const watch = wl.data?.[0];
+  const topMovers = [...positions].sort((a, b) => Math.abs(b.quote.changePct) - Math.abs(a.quote.changePct)).slice(0, 3);
+  const hour = Number(new Intl.DateTimeFormat("en-IN", { hour: "numeric", hourCycle: "h23", timeZone: "Asia/Kolkata" }).format(now));
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  const firstName = (p.display_name ?? p.username ?? "Trader").trim().split(/\s+/)[0];
+  const selectedPosition = positions.find((p) => p.symbol === selectedSymbol);
 
   const insights: string[] = [];
   if (positions.length === 0) insights.push("You haven't opened a position yet. Try a small market order to see how fills and P&L work.");
@@ -62,59 +70,38 @@ function Dashboard() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-sm text-muted-foreground">Welcome back, {p.display_name ?? p.username}</p>
-          <h1 className="text-2xl font-semibold md:text-3xl">Your trading desk</h1>
+          <h1 className="text-2xl font-semibold md:text-3xl">{greeting}, {firstName} <span aria-hidden="true">👋</span></h1>
+          <p className="mt-2 text-xs text-muted-foreground">{format(new Date(now), "EEEE, d MMMM yyyy")} · TradeQuest</p>
         </div>
         <SimBadge />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        <div className="rounded-3xl border bg-card p-5 lg:col-span-2">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Portfolio value</div>
-              <div className="num mt-1 text-4xl font-semibold">{fmtINR(summary.total)}</div>
-              <div className="mt-1 flex items-center gap-2 text-sm">
-                <span className={`num ${toneClass(summary.totalPnl)}`}>{fmtSigned(summary.totalPnl)}</span>
-                <ChangePill pct={summary.totalReturnPct} />
-                <span className="text-muted-foreground">all time</span>
-              </div>
-            </div>
-            <RangeTabs value={range} onChange={setRange} ranges={["1D", "1W", "1M", "3M", "1Y", "ALL"]} />
-          </div>
-          <div className="mt-4">
-            <PriceChart data={series} range={range} positive={series.length < 2 || series[series.length - 1].v >= series[0].v} />
-          </div>
+      <section aria-label="Portfolio overview" className="grid grid-cols-1 gap-5 border-b pb-6 sm:grid-cols-3 sm:gap-6">
+        <div><p className="text-xs text-muted-foreground">Portfolio value</p><div className="num mt-2 text-2xl font-semibold xl:text-3xl">{fmtINR(summary.total, true)}</div></div>
+        <div><p className="text-xs text-muted-foreground">Today's P&L</p><div className={`num mt-2 text-2xl font-semibold xl:text-3xl ${toneClass(summary.dayPnl)}`}>{fmtSigned(summary.dayPnl)}</div><div className={`num mt-2 flex items-center gap-1 text-xs ${toneClass(summary.dayPct)}`}>{summary.dayPct >= 0 ? <TrendingUp className="size-3.5" /> : <TrendingDown className="size-3.5" />}{fmtPct(summary.dayPct)}</div></div>
+        <div><p className="text-xs text-muted-foreground">Total return</p><div className={`num mt-2 text-2xl font-semibold xl:text-3xl ${toneClass(summary.totalReturnPct)}`}>{fmtPct(summary.totalReturnPct)}</div><p className="mt-2 text-xs text-muted-foreground">Since you started</p></div>
+      </section>
+
+      <div className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_280px] xl:gap-8">
+        <div className="min-w-0">
+          <section aria-labelledby="performance-heading">
+            <div className="flex flex-wrap items-center justify-between gap-3"><h2 id="performance-heading" className="text-base font-semibold">Portfolio Performance</h2><span className="text-xs text-muted-foreground">{range === "ALL" ? "All time" : range} · INR</span></div>
+            <div className="mt-4"><PriceChart data={series} range={range} height={300} positive={series.length < 2 || series[series.length - 1].v >= series[0].v} /></div>
+            <div className="mt-3 flex justify-center"><RangeTabs value={range} onChange={setRange} ranges={["1D", "1W", "1M", "3M", "ALL"]} /></div>
+          </section>
+          <section aria-labelledby="top-movers-heading" className="mt-6 border-t pt-5">
+            <div className="mb-3 flex items-center justify-between"><h2 id="top-movers-heading" className="text-sm font-semibold">Your top movers</h2><span className="text-[10px] text-muted-foreground">Today</span></div>
+            {topMovers.length ? <div className="divide-y">{topMovers.map((p) => <Button key={p.symbol} variant="ghost" onClick={() => setSelectedSymbol(p.symbol)} aria-pressed={selectedSymbol === p.symbol} className="h-14 w-full justify-between rounded-none px-0 hover:px-2"><span className="flex items-center gap-3"><AssetBadge symbol={p.symbol} className="size-8 text-[9px]" /><span className="text-xs font-semibold">{p.symbol}</span></span><span className="flex items-center gap-4"><Sparkline data={getHistory(p.symbol, "1D", now, 30).map((d) => d.price)} positive={p.quote.changePct >= 0} /><span className={`num w-20 text-right text-xs ${toneClass(p.quote.changePct)}`}>{fmtPct(p.quote.changePct)}</span></span></Button>)}</div> : <div className="flex flex-wrap items-center justify-between gap-3 py-4"><p className="text-sm text-muted-foreground">No holdings yet.</p><Button asChild variant="outline" size="sm"><Link to="/markets">Explore stocks <ArrowRight className="size-3.5" /></Link></Button></div>}
+          </section>
         </div>
-        <div className="rounded-3xl border bg-card p-5">
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold">Risk score</h2>
-            <ShieldAlert className="size-4 text-muted-foreground" />
-          </div>
-          <div className="mt-4 flex items-end gap-2">
-            <span className="num text-5xl font-semibold">{risk.score}</span>
-            <span className="pb-1.5 text-muted-foreground">/100 · {risk.level}</span>
-          </div>
-          <div className="mt-3 h-2 overflow-hidden rounded-full bg-gradient-to-r from-gain via-chart-3 to-loss">
-            <div className="h-full bg-background/70" style={{ marginLeft: `${risk.score}%` }} />
-          </div>
-          <ul className="mt-4 space-y-2 text-sm">
-            {risk.reasons.slice(0, 4).map((r) => (
-              <li key={r.label} className="flex justify-between gap-2">
-                <span className="text-muted-foreground">{r.label}</span>
-                <span className="num">{r.points}/{r.max}</span>
-              </li>
-            ))}
-          </ul>
-          <Link to="/portfolio" className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">Why this score <ArrowRight className="size-3.5" /></Link>
-          <p className="mt-3 text-[11px] text-muted-foreground">Educational metric only — not financial advice.</p>
-        </div>
+        <aside className="grid min-w-0 gap-6 border-t pt-6 md:grid-cols-2 xl:grid-cols-1 xl:border-l xl:border-t-0 xl:pl-6 xl:pt-0">
+          <DashboardStockPanel symbol={selectedSymbol} now={now} position={selectedPosition} />
+          <PortfolioRiskMeter positions={positions} cash={summary.cash} pending={data.pending} trades={data.trades} />
+        </aside>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-        <Stat label="Today's P&L" value={fmtSigned(summary.dayPnl)} sub={fmtPct(summary.dayPct)} tone={summary.dayPnl} />
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Stat label="Total P&L" value={fmtSigned(summary.totalPnl)} tone={summary.totalPnl} />
-        <Stat label="Return" value={fmtPct(summary.totalReturnPct)} tone={summary.totalReturnPct} />
         <Stat label="Virtual cash" value={fmtINR(summary.cash)} />
         <Stat label="Invested" value={fmtINR(summary.invested)} />
         <Stat label="Leaderboard" value={rank ? `#${rank}` : "—"} sub={lb.data ? `of ${lb.data.length} traders` : undefined} />
