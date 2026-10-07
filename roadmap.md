@@ -8,6 +8,12 @@
 ## Phase 2
 - [ ] QuestCoach AI, advanced analytics, trading journal, badges, social feed
 
+## Portfolio overview refresh
+- [ ] Personalized overview and performance with holding movers
+- [ ] Selected stock details and actual paper position
+- [ ] Visual risk meter and concentration guidance
+- [ ] Verify signed-in overview and controls
+
 ## Trading chart upgrade
 - [x] Candlestick, OHLC, line and area charts with volume and technical indicators
 - [x] Updating stock movement, market breadth and sector heatmap (clearly simulated until a licensed feed is connected)
