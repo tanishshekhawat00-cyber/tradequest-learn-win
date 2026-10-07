@@ -51,6 +51,7 @@ export function TradingChart({ symbol, now, range, onRangeChange }: { symbol: st
       };
       const gain = color("gain"), loss = color("loss"), primary = color("primary"), grid = color("border");
       const chart = lc.createChart(root, {
+        localization: { locale: "en-IN" },
         autoSize: true, layout: { background: { type: lc.ColorType.Solid, color: color("card") }, textColor: color("muted-foreground"), attributionLogo: true },
         grid: { vertLines: { color: grid }, horzLines: { color: grid } },
         rightPriceScale: { borderColor: grid }, timeScale: { borderColor: grid, timeVisible: range === "1D" || range === "1W", secondsVisible: false },
