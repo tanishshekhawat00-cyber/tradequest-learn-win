@@ -9,10 +9,10 @@
 - [ ] QuestCoach AI, advanced analytics, trading journal, badges, social feed
 
 ## Portfolio overview refresh
-- [ ] Personalized overview and performance with holding movers
-- [ ] Selected stock details and actual paper position
-- [ ] Visual risk meter and concentration guidance
-- [ ] Verify signed-in overview and controls
+- [x] Personalized overview and performance with holding movers
+- [x] Selected stock details and actual paper position (fundamentals unavailable in simulated feed)
+- [x] Visual risk meter and concentration guidance
+- [x] Verify signed-in overview and controls
 
 ## Trading chart upgrade
 - [x] Candlestick, OHLC, line and area charts with volume and technical indicators
