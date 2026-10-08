@@ -173,3 +173,17 @@
     linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 5%, transparent) 1px, transparent 1px);
   background-size: 100% 100%, 48px 48px, 48px 48px;
 }
+
+/* Mobile / installed-app polish */
+@layer base {
+  html, body { overflow-x: clip; max-width: 100%; }
+  body { -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+  button, a, [role="button"], input, select, textarea { touch-action: manipulation; }
+  @media (pointer: coarse) {
+    button, [role="button"], [role="tab"], select { min-height: 2.5rem; }
+    input, select, textarea { font-size: 16px; }
+  }
+  @media (display-mode: standalone) {
+    body { padding-top: env(safe-area-inset-top); }
+  }
+}
