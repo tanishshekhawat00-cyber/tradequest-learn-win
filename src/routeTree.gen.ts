@@ -25,6 +25,7 @@ import { Route as AuthenticatedLearnIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedLearnLessonIdRouteImport } from './routes/_authenticated/learn.$lessonId'
 import { Route as AuthenticatedMarketsIndexRouteImport } from './routes/_authenticated/markets.index'
 import { Route as AuthenticatedMarketsSymbolRouteImport } from './routes/_authenticated/markets.$symbol'
+import { Route as ApiPublicJobsDailyBackupRouteImport } from './routes/api/public/jobs/daily-backup'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -109,6 +110,12 @@ const AuthenticatedMarketsSymbolRoute =
     path: '/markets/$symbol',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicJobsDailyBackupRoute =
+  ApiPublicJobsDailyBackupRouteImport.update({
+    id: '/api/public/jobs/daily-backup',
+    path: '/api/public/jobs/daily-backup',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/markets/$symbol': typeof AuthenticatedMarketsSymbolRoute
   '/learn/': typeof AuthenticatedLearnIndexRoute
   '/markets/': typeof AuthenticatedMarketsIndexRoute
+  '/api/public/jobs/daily-backup': typeof ApiPublicJobsDailyBackupRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -143,6 +151,7 @@ export interface FileRoutesByTo {
   '/markets/$symbol': typeof AuthenticatedMarketsSymbolRoute
   '/learn': typeof AuthenticatedLearnIndexRoute
   '/markets': typeof AuthenticatedMarketsIndexRoute
+  '/api/public/jobs/daily-backup': typeof ApiPublicJobsDailyBackupRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -162,6 +171,7 @@ export interface FileRoutesById {
   '/_authenticated/markets/$symbol': typeof AuthenticatedMarketsSymbolRoute
   '/_authenticated/learn/': typeof AuthenticatedLearnIndexRoute
   '/_authenticated/markets/': typeof AuthenticatedMarketsIndexRoute
+  '/api/public/jobs/daily-backup': typeof ApiPublicJobsDailyBackupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/markets/$symbol'
     | '/learn/'
     | '/markets/'
+    | '/api/public/jobs/daily-backup'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/markets/$symbol'
     | '/learn'
     | '/markets'
+    | '/api/public/jobs/daily-backup'
   id:
     | '__root__'
     | '/'
@@ -216,6 +228,7 @@ export interface FileRouteTypes {
     | '/_authenticated/markets/$symbol'
     | '/_authenticated/learn/'
     | '/_authenticated/markets/'
+    | '/api/public/jobs/daily-backup'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -223,6 +236,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiPublicJobsDailyBackupRoute: typeof ApiPublicJobsDailyBackupRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -339,6 +353,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMarketsSymbolRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/jobs/daily-backup': {
+      id: '/api/public/jobs/daily-backup'
+      path: '/api/public/jobs/daily-backup'
+      fullPath: '/api/public/jobs/daily-backup'
+      preLoaderRoute: typeof ApiPublicJobsDailyBackupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -380,6 +401,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiPublicJobsDailyBackupRoute: ApiPublicJobsDailyBackupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -80,6 +80,16 @@ export const completeOnboarding = createServerFn({ method: "POST" })
       .eq("id", context.userId);
     if (error) throw new Error(error.code === "23505" ? "That username is taken" : error.message);
     await supabaseAdmin.from("watchlists").insert({ user_id: context.userId, name: "My Watchlist" });
+    try {
+      const { sendAdminEmail } = await import("./google.server");
+      const email = (context.claims as { email?: string })?.email ?? "unknown";
+      await sendAdminEmail(
+        `New TradeQuest account: ${data.username}`,
+        `A new account was created on TradeQuest.\n\nName: ${data.displayName}\nUsername: ${data.username}\nEmail: ${email}\nExperience: ${data.experience}\nStarting balance: ₹${data.balance.toLocaleString("en-IN")}\nTime: ${new Date().toISOString()}`,
+      );
+    } catch (e) {
+      console.error("Signup notification failed", e);
+    }
     return { ok: true };
   });
 
